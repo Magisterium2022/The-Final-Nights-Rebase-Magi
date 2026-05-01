@@ -96,12 +96,12 @@
 	serial_type = "MR"
 
 /obj/item/ammo_box/magazine/m50
-	name = "handgun magazine (.50)"
+	name = "handgun magazine (.50 AE)"
 	icon = 'modular_darkpack/modules/weapons/icons/ammo.dmi'
 	ONFLOOR_ICON_HELPER('modular_darkpack/modules/weapons/icons/ammo_onfloor.dmi')
 	icon_state = "deagle"
-	ammo_type = /obj/item/ammo_casing/vampire/c50
-	caliber = CALIBER_50CAL
+	ammo_type = /obj/item/ammo_casing/vampire/c50ae
+	caliber = CALIBER_50AE
 	max_ammo = 7
 	multiple_sprites = AMMO_BOX_FULL_EMPTY
 
