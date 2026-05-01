@@ -65,8 +65,8 @@
 
 /obj/projectile/bullet/darkpack/vamp50ae
 	name = ".50 AE bullet"
-	damage = 70
-	armour_penetration = 20
+	damage = 45
+	armour_penetration = 18
 	exposed_wound_bonus = 5
 	wound_bonus = 5
 
