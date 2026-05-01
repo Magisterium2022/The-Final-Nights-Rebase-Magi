@@ -66,6 +66,14 @@
 	icon_state = "50"
 	base_icon_state = "50"
 
+/obj/item/ammo_casing/vampire/c50ae
+	name = ".50 AE bullet casing"
+	desc = "A .50 AE bullet casing."
+	caliber = CALIBER_50AE
+	projectile_type = /obj/projectile/bullet/darkpack/vamp50ae
+	icon_state = "50"
+	base_icon_state = "50"
+
 // 5.56mm NATO
 /obj/item/ammo_casing/vampire/c556mm
 	name = "5.56mm bullet casing"
