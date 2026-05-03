@@ -252,34 +252,34 @@
 	switch(appearance_option)
 		if("Increase")
 			if(target.st_get_stat(STAT_APPEARANCE) >= 5)
-				to_chat(user, span_notice("You cannot further increase [target]'s beauty!"))
+				to_chat(owner, span_notice("You cannot further increase [target]'s beauty!"))
 				return FALSE
 			var/datum/storyteller_roll/appearance_increase/increase = new()
 			var/roll_result = increase.st_roll(owner, target)
 			switch(roll_result)
 				if(ROLL_SUCCESS)
-					to_chat(user, span_notice("You carefully modify [target]'s appearance, making them more attractive!"))
+					to_chat(owner, span_notice("You carefully modify [target]'s appearance, making them more attractive!"))
 					target.st_add_stat_mod(STAT_APPEARANCE, 1, "Vicissitude")
 				if(ROLL_FAILURE)
-					to_chat(user, span_notice("You carefully modify [target]'s appearance, but your efforts fail to make them more attractive."))
+					to_chat(owner, span_notice("You carefully modify [target]'s appearance, but your efforts fail to make them more attractive."))
 				if(ROLL_BOTCH)
-					to_chat(user, span_notice("You carefully modify [target]'s appearance, but your efforts only make them appear more unnatural!"))
-					if(target.st_get_stat(STAT_APPEARANCE) <= 0) //Avoids being able to repeatedly botch the rolls to reduce appearance below 0.
+					to_chat(owner, span_notice("You carefully modify [target]'s appearance, but your efforts only make them appear more unnatural!"))
+					if(target.st_get_stat(STAT_APPEARANCE) > 0) //Avoids being able to repeatedly botch the rolls to reduce appearance below 0.
 						target.st_add_stat_mod(STAT_APPEARANCE, -1, "Vicissitude")
 		if("Decrease") //No negative effects for botching or failing this roll.
 			if(target.st_get_stat(STAT_APPEARANCE) <= 0)
-				to_chat(user, span_notice("You cannot further decrease [target]'s beauty!"))
+				to_chat(owner, span_notice("You cannot further decrease [target]'s beauty!"))
 				return FALSE
 			var/datum/storyteller_roll/appearance_decrease/decrease = new()
-			var/roll_result = increase.st_roll(owner, target)
+			var/roll_result = decrease.st_roll(owner, target)
 			switch(roll_result)
-			if(ROLL_SUCCESS)
-				to_chat(user, span_notice("You carefully modify [target]'s appearance, making them more monstrous!"))
-				target.st_add_stat_mod(STAT_APPEARANCE, -1, "Vicissitude")
-			if(ROLL_FAILURE)
-				to_chat(user, span_notice("You carefully modify [target]'s appearance, but your efforts fail to make them more monstrous."))
-			if(ROLL_BOTCH)
-				to_chat(user, span_notice("You carefully modify [target]'s appearance, but your efforts fail to make them more monstrous."))
+				if(ROLL_SUCCESS)
+					to_chat(owner, span_notice("You carefully modify [target]'s appearance, making them more monstrous!"))
+					target.st_add_stat_mod(STAT_APPEARANCE, -1, "Vicissitude")
+				if(ROLL_FAILURE)
+					to_chat(owner, span_notice("You carefully modify [target]'s appearance, but your efforts fail to make them more monstrous."))
+				if(ROLL_BOTCH)
+					to_chat(owner, span_notice("You carefully modify [target]'s appearance, but your efforts fail to make them more monstrous."))
 	return TRUE
 
 #undef CHANGE_HAIR
