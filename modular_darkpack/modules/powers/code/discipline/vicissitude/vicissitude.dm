@@ -114,27 +114,83 @@
 
 	var/roll = SSroll.storyteller_roll((owner.st_get_stat(STAT_STRENGTH) + owner.st_get_stat(STAT_MEDICINE)), 7, owner, target, TRUE)
 
-	if(target.stat >= HARD_CRIT)
-		if(target.stat != DEAD)
-			target.death()
-		var/obj/item/bodypart/arm/right/r_arm = target.get_bodypart(BODY_ZONE_R_ARM)
-		var/obj/item/bodypart/arm/left/l_arm = target.get_bodypart(BODY_ZONE_L_ARM)
-		var/obj/item/bodypart/leg/right/r_leg = target.get_bodypart(BODY_ZONE_R_LEG)
-		var/obj/item/bodypart/leg/left/l_leg = target.get_bodypart(BODY_ZONE_L_LEG)
-		r_arm?.drop_limb()
-		l_arm?.drop_limb()
-		r_leg?.drop_limb()
-		l_leg?.drop_limb()
-		new /obj/item/stack/sheet/meat/twenty(target.loc)
-		new /obj/item/guts(target.loc)
-		new /obj/item/spine(target.loc)
-		qdel(target)
+	if(owner.combat_mode)
+		if(target.stat >= HARD_CRIT)
+			if(target.stat != DEAD)
+				target.death()
+			var/obj/item/bodypart/arm/right/r_arm = target.get_bodypart(BODY_ZONE_R_ARM)
+			var/obj/item/bodypart/arm/left/l_arm = target.get_bodypart(BODY_ZONE_L_ARM)
+			var/obj/item/bodypart/leg/right/r_leg = target.get_bodypart(BODY_ZONE_R_LEG)
+			var/obj/item/bodypart/leg/left/l_leg = target.get_bodypart(BODY_ZONE_L_LEG)
+			r_arm?.drop_limb()
+			l_arm?.drop_limb()
+			r_leg?.drop_limb()
+			l_leg?.drop_limb()
+			new /obj/item/stack/sheet/meat/twenty(target.loc)
+			new /obj/item/guts(target.loc)
+			new /obj/item/spine(target.loc)
+			qdel(target)
+		else
+			target.emote("scream")
+			target.apply_damage(roll LETHAL_TTRPG_DAMAGE, BRUTE, BODY_ZONE_CHEST)
+			if(roll >= 5)
+				target.visible_message(span_danger("[target]'s rib cage curves inwards grotesquely!"), span_danger("Your feel your ribcages curve inwards and pierce your heart!"))
+				target.adjust_blood_pool(-(round(target.bloodpool * 0.5))) // A vampire who scores five or more successes on the roll (...) cause the affected vampire to lose half his blood points.
 	else
-		target.emote("scream")
-		target.apply_damage(roll LETHAL_TTRPG_DAMAGE, BRUTE, BODY_ZONE_CHEST)
-		if(roll >= 5)
-			target.visible_message(span_danger("[target]'s rib cage curves inwards grotesquely!"), span_danger("Your feel your ribcages curve inwards and pierce your heart!"))
-			target.adjust_blood_pool(-(round(target.bloodpool * 0.5))) // A vampire who scores five or more successes on the roll (...) cause the affected vampire to lose half his blood points.
+		if(ishuman(target)
+			var/mob/living/carbon/human/H = target
+			var/limb = tgui_input_list(owner, "Which arm should grow claws?", "Choice", list("Left", "Right"))
+			if(!limb)
+				return FALSE
+			H.bonecrafting_modification(limb)
+
+/mob/living/carbon/human/proc/bonecrafting_modification(chosen_limb)
+	switch(chosen_limb)
+		if("Left")
+			var/item/held_item = target.get_held_items_for_side(LEFT_HANDS)
+			if(held_item = /obj/item/bonecrafting_claws)
+				target.visible_message(span_danger("[target]'s claws retracts back into their [chosen_limb] hand!")
+				for(var/obj/item/bonecrafting_claws/claws in target.get_held_items_for_side(LEFT_HANDS))
+				qdel(claws)
+				return
+			dropItemToGround(held_item, force = TRUE)
+			target.apply_damage(max(0, (5 - roll)) LETHAL_TTRPG_DAMAGE, BRUTE, BODY_ZONE_L_ARM)
+			target.visible_message(span_danger("[target] sprouts hideous bone claws from their [chosen_limb] hand!")
+			target.put_in_l_hand(new /obj/item/gangrel_claws)
+		if("Right")
+			var/item/held_item = target.get_held_items_for_side(RIGHT_HANDS)
+			if(held_item = /obj/item/bonecrafting_claws)
+				target.visible_message(span_danger("[target]'s claws retracts back into their [chosen_limb] hand!")
+				for(var/obj/item/bonecrafting_claws/claws in target.get_held_items_for_side(RIGHT_HANDS))
+				qdel(claws)
+				return
+			dropItemToGround(held_item, force = TRUE)
+			target.apply_damage(max(0, (5 - roll)) LETHAL_TTRPG_DAMAGE, BRUTE, BODY_ZONE_R_ARM)
+			target.visible_message(span_danger("[target] sprouts hideous bone claws from their [chosen_limb] hand!")
+			target.put_in_r_hand(new /obj/item/gangrel_claws)
+
+/obj/item/bonecrafting_claws
+	name = "claws"
+	desc = "Don't cut yourself accidentally."
+	icon_state = "gangrel"
+	icon = 'modular_darkpack/modules/weapons/icons/weapons.dmi'
+	lefthand_file = 'modular_darkpack/modules/deprecated/icons/lefthand.dmi'
+	righthand_file = 'modular_darkpack/modules/deprecated/icons/righthand.dmi'
+	hitsound = 'sound/items/weapons/slash.ogg'
+	force = 1 TTRPG_DAMAGE
+	damtype = BRUTE
+	sharpness = SHARP_EDGED
+	item_flags = DROPDEL
+	masquerade_violating = TRUE
+	obj_flags = NONE
+
+/obj/item/bonecrafting_claws/Initialize(mapload)
+	. = ..()
+	ADD_TRAIT(src, TRAIT_NODROP, INNATE_TRAIT)
+
+/obj/item/bonecrafting_claws/pre_attack(atom/target, mob/living/user, list/modifiers, list/attack_modifiers)
+	. = ..()
+	force = ((user.st_get_stat(STAT_STRENGTH) + 1) * 5) //Half TTRPG damage per hit.
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
