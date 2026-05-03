@@ -5,7 +5,8 @@
 #define CHANGE_EYES "Change Eyes"
 #define CHANGE_RACE "Change Race"
 #define CHANGE_HEIGHT "Change Height"
-#define CHOICE_OPTIONS list(CHANGE_HAIR, CHANGE_BEARD, CHANGE_SEX, CHANGE_EYES, CHANGE_NAME, CHANGE_RACE, CHANGE_HEIGHT)
+#define CHANGE_APPEARANCE "Change Appearance"
+#define CHOICE_OPTIONS list(CHANGE_HAIR, CHANGE_BEARD, CHANGE_SEX, CHANGE_EYES, CHANGE_NAME, CHANGE_RACE, CHANGE_HEIGHT, CHANGE_APPEARANCE)
 
 /datum/action/cooldown/mob_cooldown/shapeshift
 	owner_has_control = FALSE
@@ -48,6 +49,8 @@
 				change_race(target)
 			if(CHANGE_HEIGHT)
 				change_height(target)
+			if(CHANGE_APPEARANCE)
+				change_appearance(target)
 	else
 		to_chat(owner, span_danger("You need to have a firm grip on [target]!"))
 		return TRUE
@@ -228,6 +231,57 @@
 	to_chat(owner, span_notice("You finish altering the height of [target]."))
 	return TRUE
 
+/datum/storyteller_roll/appearance_increase //V20 Core Page 241
+	applicable_stats = list(STAT_INTELLIGENCE, STAT_MEDICINE)
+	difficulty = 9
+	roll_output_type = ROLL_PRIVATE
+
+/datum/storyteller_roll/appearance_decrease
+	applicable_stats = list(STAT_INTELLIGENCE, STAT_MEDICINE)
+	difficulty = 5
+	roll_output_type = ROLL_PRIVATE
+
+/datum/action/cooldown/mob_cooldown/shapeshift/proc/change_appearance(mob/living/carbon/human/target) //This costs 1 BP per dot increase, but it's only allowing a 1 dot increase per use, so it comes out to the same cost.
+	var/appearance_option = tgui_input_list(owner, "Increase or Decrease Appearance?", "Confirmation", list("Increase", "Decrease"))
+	if(!appearance_option)
+		return FALSE
+	if(!IN_GIVEN_RANGE(owner, target, range))
+		return FALSE
+	if(!do_after(owner, delay = 1 TURNS, target = target))
+		return FALSE
+	switch(appearance_option)
+		if("Increase")
+			if(target.st_get_stat(STAT_APPEARANCE) >= 5)
+				to_chat(user, span_notice("You cannot further increase [target]'s beauty!"))
+				return FALSE
+			var/datum/storyteller_roll/appearance_increase/increase = new()
+			var/roll_result = increase.st_roll(owner, target)
+			switch(roll_result)
+				if(ROLL_SUCCESS)
+					to_chat(user, span_notice("You carefully modify [target]'s appearance, making them more attractive!))
+					target.st_add_stat_mod(STAT_APPEARANCE, 1, "Vicissitude")
+				if(ROLL_FAILURE)
+					to_chat(user, span_notice("You carefully modify [target]'s appearance, but your efforts fail to make them more attractive."))
+				if(ROLL_BOTCH)
+					to_chat(user, span_notice("You carefully modify [target]'s appearance, but your efforts only make them appear more unnatural!"))
+					if(target.st_get_stat(STAT_APPEARANCE) <= 0) //Avoids being able to repeatedly botch the rolls to reduce appearance below 0.
+						target.st_add_stat_mod(STAT_APPEARANCE, -1, "Vicissitude")
+		if("Decrease") //No negative effects for botching or failing this roll.
+			if(target.st_get_stat(STAT_APPEARANCE) <= 0)
+				to_chat(user, span_notice("You cannot further decrease [target]'s beauty!"))
+				return FALSE
+			var/datum/storyteller_roll/appearance_decrease/decrease = new()
+			var/roll_result = increase.st_roll(owner, target)
+			switch(roll_result)
+			if(ROLL_SUCCESS)
+				to_chat(user, span_notice("You carefully modify [target]'s appearance, making them more monstrous!))
+				target.st_add_stat_mod(STAT_APPEARANCE, -1, "Vicissitude")
+			if(ROLL_FAILURE)
+				to_chat(user, span_notice("You carefully modify [target]'s appearance, but your efforts fail to make them more monstrous."))
+			if(ROLL_BOTCH)
+				to_chat(user, span_notice("You carefully modify [target]'s appearance, but your efforts fail to make them more monstrous."))
+	return TRUE
+
 #undef CHANGE_HAIR
 #undef CHANGE_BEARD
 #undef CHANGE_SEX
@@ -235,4 +289,5 @@
 #undef CHANGE_NAME
 #undef CHANGE_RACE
 #undef CHANGE_HEIGHT
+#undef CHANGE_APPEARANCE
 #undef CHOICE_OPTIONS
