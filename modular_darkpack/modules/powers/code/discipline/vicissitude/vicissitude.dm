@@ -137,36 +137,36 @@
 				target.visible_message(span_danger("[target]'s rib cage curves inwards grotesquely!"), span_danger("Your feel your ribcages curve inwards and pierce your heart!"))
 				target.adjust_blood_pool(-(round(target.bloodpool * 0.5))) // A vampire who scores five or more successes on the roll (...) cause the affected vampire to lose half his blood points.
 	else
-		if(ishuman(target)
+		if(ishuman(target))
 			var/mob/living/carbon/human/H = target
 			var/limb = tgui_input_list(owner, "Which arm should grow claws?", "Choice", list("Left", "Right"))
 			if(!limb)
 				return FALSE
-			H.bonecrafting_modification(limb)
+			H.bonecrafting_modification(limb, target, roll)
 
-/mob/living/carbon/human/proc/bonecrafting_modification(chosen_limb)
+/mob/living/carbon/human/proc/bonecrafting_modification(chosen_limb, mob/living/carbon/human/target, roll)
 	switch(chosen_limb)
 		if("Left")
-			var/item/held_item = target.get_held_items_for_side(LEFT_HANDS)
-			if(held_item = /obj/item/bonecrafting_claws)
-				target.visible_message(span_danger("[target]'s claws retracts back into their [chosen_limb] hand!")
+			var/obj/item/held_item = target.get_held_items_for_side(LEFT_HANDS)
+			if(held_item == /obj/item/bonecrafting_claws)
+				target.visible_message(span_danger("[target]'s claws retracts back into their [chosen_limb] hand!"))
 				for(var/obj/item/bonecrafting_claws/claws in target.get_held_items_for_side(LEFT_HANDS))
-				qdel(claws)
-				return
+					qdel(claws)
+					return
 			dropItemToGround(held_item, force = TRUE)
 			target.apply_damage(max(0, (5 - roll)) LETHAL_TTRPG_DAMAGE, BRUTE, BODY_ZONE_L_ARM)
-			target.visible_message(span_danger("[target] sprouts hideous bone claws from their [chosen_limb] hand!")
+			target.visible_message(span_danger("[target] sprouts hideous bone claws from their [chosen_limb] hand!"))
 			target.put_in_l_hand(new /obj/item/gangrel_claws)
 		if("Right")
-			var/item/held_item = target.get_held_items_for_side(RIGHT_HANDS)
-			if(held_item = /obj/item/bonecrafting_claws)
-				target.visible_message(span_danger("[target]'s claws retracts back into their [chosen_limb] hand!")
+			var/obj/item/held_item = target.get_held_items_for_side(RIGHT_HANDS)
+			if(held_item == /obj/item/bonecrafting_claws)
+				target.visible_message(span_danger("[target]'s claws retracts back into their [chosen_limb] hand!"))
 				for(var/obj/item/bonecrafting_claws/claws in target.get_held_items_for_side(RIGHT_HANDS))
-				qdel(claws)
-				return
+					qdel(claws)
+					return
 			dropItemToGround(held_item, force = TRUE)
 			target.apply_damage(max(0, (5 - roll)) LETHAL_TTRPG_DAMAGE, BRUTE, BODY_ZONE_R_ARM)
-			target.visible_message(span_danger("[target] sprouts hideous bone claws from their [chosen_limb] hand!")
+			target.visible_message(span_danger("[target] sprouts hideous bone claws from their [chosen_limb] hand!"))
 			target.put_in_r_hand(new /obj/item/gangrel_claws)
 
 /obj/item/bonecrafting_claws
