@@ -95,11 +95,11 @@
 
 /datum/discipline_power/vicissitude/bonecrafting
 	name = "Bonecrafting"
-	desc = "Forcefully injure a body."
+	desc = "Forcefully injure a body or grow claws."
 
 	level = 3
 	check_flags = DISC_CHECK_CONSCIOUS | DISC_CHECK_CAPABLE | DISC_CHECK_FREE_HAND | DISC_CHECK_IMMOBILE
-	target_type = TARGET_MOB
+	target_type =  TARGET_SELF | TARGET_MOB
 	vitae_cost = 1
 	range = 1
 	toggled = FALSE
