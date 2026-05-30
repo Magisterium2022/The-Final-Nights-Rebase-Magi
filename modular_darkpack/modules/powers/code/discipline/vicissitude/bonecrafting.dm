@@ -10,7 +10,7 @@
 			dropItemToGround(held_item, force = TRUE)
 			target.apply_damage(max(0, (5 - roll)) LETHAL_TTRPG_DAMAGE, BRUTE, BODY_ZONE_L_ARM)
 			target.visible_message(span_danger("[target] sprouts hideous bone claws from their [chosen_limb] hand!"))
-			target.put_in_l_hand(new /obj/item/gangrel_claws)
+			target.put_in_l_hand(new /obj/item/bonecrafting_claws)
 		if("Right")
 			var/obj/item/held_item = target.get_held_items_for_side(RIGHT_HANDS)
 			if(held_item == /obj/item/bonecrafting_claws)
@@ -21,7 +21,7 @@
 			dropItemToGround(held_item, force = TRUE)
 			target.apply_damage(max(0, (5 - roll)) LETHAL_TTRPG_DAMAGE, BRUTE, BODY_ZONE_R_ARM)
 			target.visible_message(span_danger("[target] sprouts hideous bone claws from their [chosen_limb] hand!"))
-			target.put_in_r_hand(new /obj/item/gangrel_claws)
+			target.put_in_r_hand(new /obj/item/bonecrafting_claws)
 
 /obj/item/bonecrafting_claws
 	name = "claws"
