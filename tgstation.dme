@@ -7675,6 +7675,7 @@
 #include "modular_darkpack\modules\powers\code\discipline\thaumaturgy\status_effects\blood_of_potency_effect.dm"
 #include "modular_darkpack\modules\powers\code\discipline\thaumaturgy\status_effects\blood_rage_status.dm"
 #include "modular_darkpack\modules\powers\code\discipline\vicissitude\blood_form.dm"
+#include "modular_darkpack\modules\powers\code\discipline\vicissitude\bonecrafting.dm"
 #include "modular_darkpack\modules\powers\code\discipline\vicissitude\crafting_recipes.dm"
 #include "modular_darkpack\modules\powers\code\discipline\vicissitude\shapeshifting.dm"
 #include "modular_darkpack\modules\powers\code\discipline\vicissitude\vicissitude.dm"
