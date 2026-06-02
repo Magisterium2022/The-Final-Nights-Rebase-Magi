@@ -1,22 +1,22 @@
 /mob/living/carbon/human/proc/bonecrafting_modification(chosen_limb, mob/living/carbon/human/target, roll)
 	switch(chosen_limb)
-		if("Left")
+		if("left")
 			var/obj/item/held_item = target.get_held_items_for_side(LEFT_HANDS)
-			if(held_item == /obj/item/bonecrafting_claws)
-				target.visible_message(span_danger("[target]'s claws retracts back into their [chosen_limb] hand!"))
-				for(var/obj/item/bonecrafting_claws/claws in target.get_held_items_for_side(LEFT_HANDS))
-					qdel(claws)
+			for(var/obj/item/I in target.get_held_items_for_side(LEFT_HANDS, all = TRUE)) //Covers edge cases with multiple limbs
+				if(istype(I, /obj/item/bonecrafting_claws))
+					target.visible_message(span_danger("[target]'s claws retracts back into their [chosen_limb] hand!"))
+					qdel(I)
 					return
 			dropItemToGround(held_item, force = TRUE)
 			target.apply_damage(max(0, (5 - roll)) LETHAL_TTRPG_DAMAGE, BRUTE, BODY_ZONE_L_ARM)
 			target.visible_message(span_danger("[target] sprouts hideous bone claws from their [chosen_limb] hand!"))
 			target.put_in_l_hand(new /obj/item/bonecrafting_claws)
-		if("Right")
+		if("right")
 			var/obj/item/held_item = target.get_held_items_for_side(RIGHT_HANDS)
-			if(held_item == /obj/item/bonecrafting_claws)
-				target.visible_message(span_danger("[target]'s claws retracts back into their [chosen_limb] hand!"))
-				for(var/obj/item/bonecrafting_claws/claws in target.get_held_items_for_side(RIGHT_HANDS))
-					qdel(claws)
+			for(var/obj/item/I in target.get_held_items_for_side(RIGHT_HANDS, all = TRUE))
+				if(istype(I, /obj/item/bonecrafting_claws))
+					target.visible_message(span_danger("[target]'s claws retracts back into their [chosen_limb] hand!"))
+					qdel(I)
 					return
 			dropItemToGround(held_item, force = TRUE)
 			target.apply_damage(max(0, (5 - roll)) LETHAL_TTRPG_DAMAGE, BRUTE, BODY_ZONE_R_ARM)
@@ -24,7 +24,7 @@
 			target.put_in_r_hand(new /obj/item/bonecrafting_claws)
 
 /obj/item/bonecrafting_claws
-	name = "claws"
+	name = "bone claws"
 	desc = "Don't cut yourself accidentally."
 	icon_state = "gangrel"
 	icon = 'modular_darkpack/modules/weapons/icons/weapons.dmi'
