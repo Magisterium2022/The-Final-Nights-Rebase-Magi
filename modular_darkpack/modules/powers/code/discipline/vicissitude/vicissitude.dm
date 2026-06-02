@@ -148,7 +148,7 @@
 	else
 		if(ishuman(target))
 			var/mob/living/carbon/human/H = target
-			var/limb = tgui_input_list(owner, "Which arm should grow claws?", "Choice", list("Left", "Right"))
+			var/limb = tgui_input_list(owner, "Which arm should grow claws?", "Choice", list("left", "right"))
 			if(!limb)
 				return FALSE
 			H.bonecrafting_modification(limb, target, roll)
