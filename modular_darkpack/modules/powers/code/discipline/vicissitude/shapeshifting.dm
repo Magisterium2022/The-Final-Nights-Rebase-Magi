@@ -242,6 +242,7 @@
 	roll_output_type = ROLL_PRIVATE
 
 /datum/action/cooldown/mob_cooldown/shapeshift/proc/change_appearance(mob/living/carbon/human/target) //This costs 1 BP per dot increase, but it's only allowing a 1 dot increase per use, so it comes out to the same cost.
+	var/bonus = ((target.storyteller_stats[STAT_APPEARANCE].get_score(include_bonus = TRUE)) - (target.storyteller_stats[STAT_APPEARANCE].get_score(include_bonus = FALSE)))
 	var/appearance_option = tgui_input_list(owner, "Increase or Decrease Appearance?", "Confirmation", list("Increase", "Decrease"))
 	if(!appearance_option)
 		return FALSE
@@ -259,13 +260,13 @@
 			switch(roll_result)
 				if(ROLL_SUCCESS)
 					to_chat(owner, span_notice("You carefully modify [target]'s appearance, making them more attractive!"))
-					target.st_add_stat_mod(STAT_APPEARANCE, 1, "Vicissitude")
+					target.st_add_stat_mod(STAT_APPEARANCE, (bonus + 1), "Vicissitude")
 				if(ROLL_FAILURE)
 					to_chat(owner, span_notice("You carefully modify [target]'s appearance, but your efforts fail to make them more attractive."))
 				if(ROLL_BOTCH)
 					to_chat(owner, span_notice("You carefully modify [target]'s appearance, but your efforts only make them appear more unnatural!"))
 					if(target.st_get_stat(STAT_APPEARANCE) > 0) //Avoids being able to repeatedly botch the rolls to reduce appearance below 0.
-						target.st_add_stat_mod(STAT_APPEARANCE, -1, "Vicissitude")
+						target.st_add_stat_mod(STAT_APPEARANCE, (bonus - 1), "Vicissitude")
 		if("Decrease") //No negative effects for botching or failing this roll.
 			if(target.st_get_stat(STAT_APPEARANCE) <= 0)
 				to_chat(owner, span_notice("You cannot further decrease [target]'s beauty!"))
@@ -275,7 +276,7 @@
 			switch(roll_result)
 				if(ROLL_SUCCESS)
 					to_chat(owner, span_notice("You carefully modify [target]'s appearance, making them more monstrous!"))
-					target.st_add_stat_mod(STAT_APPEARANCE, -1, "Vicissitude")
+					target.st_add_stat_mod(STAT_APPEARANCE, (bonus - 1), "Vicissitude")
 				if(ROLL_FAILURE)
 					to_chat(owner, span_notice("You carefully modify [target]'s appearance, but your efforts fail to make them more monstrous."))
 				if(ROLL_BOTCH)
