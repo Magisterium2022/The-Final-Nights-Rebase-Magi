@@ -20,6 +20,7 @@
 
 /datum/action/cooldown/power/gift/stepping_sideways/IsAvailable()
 	. = ..()
+	var/turf/owner_turf = get_turf(owner)
 	if(!is_reflection_nearby(get_turf(owner_turf)))
 		return FALSE
 
@@ -36,10 +37,9 @@
 /datum/action/cooldown/power/gift/stepping_sideways/Activate(atom/target)
 	. = ..()
 
-	var/mob/living/living_mob = owner
 	var/datum/splat/werewolf/shifter/shifter = get_shifter_splat(owner)
-	var/difficulty = shifter.get_gauntlet_rating()
-	var/successes = SSroll.storyteller_roll_datum(owner, roll_datum = /datum/storyteller_roll/gift/stepping_sideways, bonus = owner.gnosis, difficulty = difficulty)
+	var/difficulty = owner.get_gauntlet_rating()
+	var/successes = SSroll.storyteller_roll_datum(owner, roll_datum = /datum/storyteller_roll/gift/stepping_sideways, bonus = shifter.gnosis, difficulty = difficulty)
 
 	if(successes < 0)
 		to_chat(owner, span_bolddanger("You rapidly cross the gauntlet in a coruscating flash of light only to find yourself caught in a web!"))
@@ -62,19 +62,19 @@
 		cross_gauntlet(owner)
 	return
 
-/datum/action/cooldown/power/gift/cross_gauntlet/proc/enter_umbra(var/mob/living/owner)
+/datum/action/cooldown/power/gift/stepping_sideways/proc/cross_gauntlet(var/mob/living/owner)
 	if(HAS_TRAIT(owner, TRAIT_CURRENTLY_SIDESTEPPING))
 		exit_umbra(owner)
 	else
 		enter_umbra(owner)
 
-/datum/action/cooldown/power/gift/cross_gauntlet/proc/enter_umbra(var/mob/living/owner)
+/datum/action/cooldown/power/gift/stepping_sideways/proc/enter_umbra(var/mob/living/owner)
 	var/atom/nearby_reflection = is_reflection_nearby(owner)
 	if(!nearby_reflection)
 		to_chat(owner, span_warning("There are no reflective surfaces nearby to enter the mirror's realm!"))
 		return
 
-	owner.Beam(nearby_reflection, icon_state = "light_beam", time = phase_out_time)
+	owner.Beam(nearby_reflection, icon_state = "light_beam", time = 0.5 SECONDS)
 	nearby_reflection.visible_message(span_warning("[nearby_reflection] begins to shimmer and shake slightly!"))
 	if(!do_after(owner, 0.5 SECONDS, nearby_reflection, IGNORE_USER_LOC_CHANGE|IGNORE_INCAPACITATED, hidden = TRUE))
 		return
@@ -84,21 +84,21 @@
 		span_boldwarning("[owner] phases out of reality, vanishing before your very eyes in a flash of coruscating lights!"),
 		span_notice("You jump into the reflection coming off of [nearby_reflection], entering the Umbra."),
 	)
-	see_invisible = INVISIBILITY_REVENANT
+	owner.see_invisible = INVISIBILITY_REVENANT
 	owner.update_sight()
 	owner.incorporeal_move = INCORPOREAL_MOVE_BASIC
 	owner.invisibility = INVISIBILITY_REVENANT
 	ADD_TRAIT(owner, TRAIT_CURRENTLY_SIDESTEPPING, GIFT_TRAIT)
 	ADD_TRAIT(owner, TRAIT_HANDS_BLOCKED, GIFT_TRAIT)
 
-/datum/action/cooldown/power/gift/cross_gauntlet/proc/exit_umbra(var/mob/living/owner)
+/datum/action/cooldown/power/gift/stepping_sideways/proc/exit_umbra(var/mob/living/owner)
 	var/turf/phase_turf = get_turf(owner)
 	var/atom/nearby_reflection = is_reflection_nearby(phase_turf)
 	if(!owner)
 		to_chat(owner, span_warning("There are no reflective surfaces nearby to exit from the mirror's realm!"))
 		return FALSE
 
-	nearby_reflection.Beam(phase_turf, icon_state = "light_beam", time = phase_in_time)
+	nearby_reflection.Beam(phase_turf, icon_state = "light_beam", time = 0.5 SECONDS)
 	nearby_reflection.visible_message(span_warning("[nearby_reflection] begins to shimmer and shake slightly!"))
 	if(!do_after(owner, 0.5 SECONDS, nearby_reflection, hidden = TRUE))
 		return FALSE
@@ -108,7 +108,7 @@
 		span_boldwarning("[owner] phases into reality before your very eyes in a flash of coruscating lights!"),
 		span_notice("You jump out of the reflection coming off of [nearby_reflection], exiting the Umbra."),
 	)
-	see_invisible = SEE_INVISIBLE_LIVING
+	owner.see_invisible = SEE_INVISIBLE_LIVING
 	owner.update_sight()
 	owner.incorporeal_move = FALSE
 	owner.invisibility = INVISIBILITY_NONE
@@ -129,7 +129,7 @@
  * Returns an object reference to a "reflective" object in view if one was found,
  * or null if no object was found that was determined to be "reflective".
  */
-/datum/action/cooldown/spell/jaunt/mirror_walk/proc/is_reflection_nearby(atom/caster)
+/datum/action/cooldown/power/gift/stepping_sideways/proc/is_reflection_nearby(atom/caster)
 	for(var/atom/thing as anything in view(2, caster))
 		if(isitem(thing))
 			var/obj/item/item_thing = thing
@@ -152,17 +152,3 @@
 			return thing
 
 	return null
-
-/obj/effect/dummy/phased_mob/mirror_walk
-	name = "reflection"
-
-/obj/effect/dummy/phased_mob/mirror_walk/Initialize(mapload, atom/movable/jaunter)
-	. = ..()
-	START_PROCESSING(SSobj, src)
-
-/obj/effect/dummy/phased_mob/mirror_walk/process(seconds_per_tick)
-	if(!isliving(jaunter))
-		STOP_PROCESSING(SSobj, src)
-		return ..()
-	var/mob/living/living_jaunter = jaunter
-	living_jaunter.heal_overall_damage(5 * seconds_per_tick)
