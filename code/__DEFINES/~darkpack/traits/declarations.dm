@@ -156,6 +156,10 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_NATURAL "natural"
 #define TRAIT_AURA_OF_CONFIDENCE "aura_of_confidence"
 
+//Stepping sideways/umbra traits
+#define TRAIT_NO_SIDESTEPPING "no_sidestepping"
+#define TRAIT_CURRENTLY_SIDESTEPPING "currently_sidestepping"
+
 /// Mob has had atleast one tooth yanked out while having no method of regenerating it.
 #define TRAIT_TOOTH_PULLED "tooth_pulled"
 
