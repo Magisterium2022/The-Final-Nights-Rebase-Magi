@@ -84,7 +84,10 @@
 		span_boldwarning("[owner] phases out of reality, vanishing before your very eyes in a flash of coruscating lights!"),
 		span_notice("You jump into the reflection coming off of [nearby_reflection], entering the Umbra."),
 	)
-	owner.see_invisible = INVISIBILITY_REVENANT
+	var/obj/item/organ/eyes/eyes = owner.get_organ_slot(ORGAN_SLOT_EYES)
+	if(eyes)
+		eyes.see_invisible = INVISIBILITY_REVENANT
+	owner.update_sight()
 	owner.invisibility = INVISIBILITY_REVENANT
 	ADD_TRAIT(owner, TRAIT_CURRENTLY_SIDESTEPPING, GIFT_TRAIT)
 	ADD_TRAIT(owner, TRAIT_HANDS_BLOCKED, GIFT_TRAIT)
@@ -108,12 +111,14 @@
 		span_boldwarning("[owner] phases into reality before your very eyes in a flash of coruscating lights!"),
 		span_notice("You jump out of the reflection coming off of [nearby_reflection], exiting the Umbra."),
 	)
-	owner.see_invisible = SEE_INVISIBLE_LIVING
+	var/obj/item/organ/eyes/eyes = owner.get_organ_slot(ORGAN_SLOT_EYES)
+	if(eyes)
+		eyes.see_invisible = SEE_INVISIBLE_LIVING
+	owner.update_sight()
 	owner.invisibility = INVISIBILITY_NONE
 	REMOVE_TRAIT(owner, TRAIT_CURRENTLY_SIDESTEPPING, GIFT_TRAIT)
 	REMOVE_TRAIT(owner, TRAIT_HANDS_BLOCKED, GIFT_TRAIT)
 	SEND_SIGNAL(owner, COMSIG_MASQUERADE_VIOLATION)
-	owner.update_sight()
 	owner.pass_flags &= ~(PASSDOORS | PASSTABLE | PASSSTRUCTURE)
 
 /datum/action/cooldown/power/gift/stepping_sideways/proc/sidestepping_unlock(atom/target)
