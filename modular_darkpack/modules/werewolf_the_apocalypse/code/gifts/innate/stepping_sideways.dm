@@ -89,7 +89,7 @@
 	owner.incorporeal_move = INCORPOREAL_MOVE_BASIC
 	owner.invisibility = INVISIBILITY_REVENANT
 	ADD_TRAIT(owner, TRAIT_CURRENTLY_SIDESTEPPING, GIFT_TRAIT)
-	ADD_TRAIT(owner, TRAIT_ONLY_SEE_UMBRA, GIFT_TRAIT)
+	ADD_TRAIT(owner, TRAIT_HANDS_BLOCKED, GIFT_TRAIT)
 
 /datum/action/cooldown/power/gift/cross_gauntlet/proc/exit_umbra(var/mob/living/owner)
 	var/turf/phase_turf = get_turf(owner)
@@ -113,7 +113,7 @@
 	owner.incorporeal_move = FALSE
 	owner.invisibility = INVISIBILITY_NONE
 	REMOVE_TRAIT(owner, TRAIT_CURRENTLY_SIDESTEPPING, GIFT_TRAIT)
-	REMOVE_TRAIT(owner, TRAIT_ONLY_SEE_UMBRA, GIFT_TRAIT)
+	REMOVE_TRAIT(owner, TRAIT_HANDS_BLOCKED, GIFT_TRAIT)
 
 /datum/action/cooldown/power/gift/stepping_sideways/proc/sidestepping_unlock(atom/target)
 	REMOVE_TRAIT(owner, TRAIT_NO_SIDESTEPPING, GIFT_TRAIT)
