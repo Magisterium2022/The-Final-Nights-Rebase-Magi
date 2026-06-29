@@ -288,13 +288,13 @@
 	var/list/hearers = mob_only_listeners(get_hearers_in_view(vision_distance, src)) //caches the hearers and then removes ignored mobs.
 	hearers -= ignored_mobs
 	if(HAS_TRAIT(src, TRAIT_CURRENTLY_SIDESTEPPING)) // DARKPACK EDIT - WEREWOLF Avoids people listening into/from the Umbra.
-		for(var/mob/living/listener in hearers)
-		if(!HAS_TRAIT(listener, TRAIT_CURRENTLY_SIDESTEPPING)
-			hearers -= listener
+		for(var/mob/living/carbon/human/listener in hearers)
+			if(!HAS_TRAIT(listener, TRAIT_CURRENTLY_SIDESTEPPING))
+				hearers -= listener
 	else 
-		for(var/mob/living/listener in hearers)
-		if(HAS_TRAIT(listener, TRAIT_CURRENTLY_SIDESTEPPING)
-			hearers -= listener
+		for(var/mob/living/carbon/human/listener in hearers)
+			if(HAS_TRAIT(listener, TRAIT_CURRENTLY_SIDESTEPPING))
+				hearers -= listener
 
 	var/raw_msg = message
 	var/space = should_have_space_before_emote(html_decode(message)[1]) ? " " : "" // DARKPACK EDIT ADD
