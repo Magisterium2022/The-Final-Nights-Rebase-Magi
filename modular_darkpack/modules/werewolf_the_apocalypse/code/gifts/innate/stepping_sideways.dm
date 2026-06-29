@@ -2,13 +2,14 @@
 	name = "Step Sideways"
 	desc = "Enter the near Umbra through a reflective surface."
 	button_icon_state = "call_of_the_wyld"
-	rage_cost = 1
+	rage_cost = 0
 	check_flags = null
 	innate_ability = TRUE
 	var/static/list/special_reflective_surfaces = typecacheof(list(
 		/obj/structure/window,
 		/obj/structure/mirror,
-		/turf/open/water/beach/vamp,
+		/obj/item/wallframe/mirror,
+		/turf/open/water,
 		/turf/open/floor/glass,
 		/obj/item/shard,
 		/obj/item/stack/sheet/glass,
@@ -34,7 +35,7 @@
 
 	return TRUE
 
-/datum/action/cooldown/power/gift/stepping_sideways/Activate(atom/target)
+/datum/action/cooldown/power/gift/stepping_sideways/Activate()
 	. = ..()
 
 	var/datum/splat/werewolf/shifter/shifter = get_shifter_splat(owner)
@@ -90,6 +91,7 @@
 	owner.invisibility = INVISIBILITY_REVENANT
 	ADD_TRAIT(owner, TRAIT_CURRENTLY_SIDESTEPPING, GIFT_TRAIT)
 	ADD_TRAIT(owner, TRAIT_HANDS_BLOCKED, GIFT_TRAIT)
+	SEND_SIGNAL(owner, COMSIG_MASQUERADE_VIOLATION)
 
 /datum/action/cooldown/power/gift/stepping_sideways/proc/exit_umbra(var/mob/living/owner)
 	var/turf/phase_turf = get_turf(owner)
@@ -114,6 +116,7 @@
 	owner.invisibility = INVISIBILITY_NONE
 	REMOVE_TRAIT(owner, TRAIT_CURRENTLY_SIDESTEPPING, GIFT_TRAIT)
 	REMOVE_TRAIT(owner, TRAIT_HANDS_BLOCKED, GIFT_TRAIT)
+	SEND_SIGNAL(owner, COMSIG_MASQUERADE_VIOLATION)
 
 /datum/action/cooldown/power/gift/stepping_sideways/proc/sidestepping_unlock(atom/target)
 	REMOVE_TRAIT(owner, TRAIT_NO_SIDESTEPPING, GIFT_TRAIT)
