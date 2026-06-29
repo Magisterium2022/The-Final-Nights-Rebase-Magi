@@ -131,6 +131,7 @@
 	. = ..()
 	owner.set_species(/datum/species/human/shifter/homid)
 	add_power(/datum/action/cooldown/power/gift/howling)
+	add_power(/datum/action/cooldown/power/gift/stepping_sideways)
 
 	RegisterSignal(owner, COMSIG_LIVING_DEATH, PROC_REF(revert_to_breed_form))
 
@@ -140,6 +141,7 @@
 		owner.set_species(/datum/species/human)
 
 	remove_power(/datum/action/cooldown/power/gift/howling)
+	remove_power(/datum/action/cooldown/power/gift/stepping_sideways)
 	UnregisterSignal(owner, COMSIG_LIVING_DEATH)
 
 /datum/splat/werewolf/shifter/splat_life(seconds_per_tick)
