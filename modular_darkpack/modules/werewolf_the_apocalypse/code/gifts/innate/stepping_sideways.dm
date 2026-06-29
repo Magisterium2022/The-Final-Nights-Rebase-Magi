@@ -8,10 +8,10 @@
 	var/static/list/special_reflective_surfaces = typecacheof(list(
 		/obj/structure/window,
 		/obj/structure/mirror,
-    /turf/open/water/beach/vamp,
-    /turf/open/floor/glass,
-    /obj/item/shard/broken_glass,
-    /obj/item/stack/sheet/glass,
+		/turf/open/water/beach/vamp,
+		/turf/open/floor/glass,
+		/obj/item/shard/broken_glass,
+		/obj/item/stack/sheet/glass,
 	))
 
 /datum/storyteller_roll/gift/stepping_sideways
@@ -27,11 +27,11 @@
 		to_chat(owner, span_warning("Something is blocking you from crossing the Gauntlet here!"))
 		return FALSE
 
-  if(HAS_TRAIT(owner, TRAIT_NO_SIDESTEPPING))
+	if(HAS_TRAIT(owner, TRAIT_NO_SIDESTEPPING))
 		to_chat(owner, span_warning("Reality flinches, you cannot cross the Gauntlet for a while!"))
 		return FALSE
 
-  return TRUE
+	return TRUE
 
 /datum/action/cooldown/power/gift/stepping_sideways/Activate(atom/target)
 	. = ..()
@@ -39,32 +39,32 @@
 	var/mob/living/living_mob = owner
 	var/datum/splat/werewolf/shifter/shifter = get_shifter_splat(owner)
 	var/difficulty = shifter.get_gauntlet_rating()
-	var/successes = SSroll.storyteller_roll_datum(owner,  roll_datum = /datum/storyteller_roll/gift/stepping_sideways, bonus = owner.gnosis, difficulty = difficulty)
+	var/successes = SSroll.storyteller_roll_datum(owner, roll_datum = /datum/storyteller_roll/gift/stepping_sideways, bonus = owner.gnosis, difficulty = difficulty)
 
 	if(successes < 0)
-    to_chat(owner, span_bolddanger("You rapidly cross the gauntlet in a coruscating flash of light only to find yourself caught in a web!"))
+		to_chat(owner, span_bolddanger("You rapidly cross the gauntlet in a coruscating flash of light only to find yourself caught in a web!"))
 	else if(successes == 0)
-    to_chat(owner, span_danger("You attempt to cross the Gauntlet, but at the last moment you spot the Weaver's presence waiting for you! It won't be safe to attempt this again any time soon."))
+		to_chat(owner, span_danger("You attempt to cross the Gauntlet, but at the last moment you spot the Weaver's presence waiting for you! It won't be safe to attempt this again any time soon."))
 	else if(successes == 1)
-    to_chat(owner, span_warning("You begin to slowly cross the Gauntlet, although it is a great struggle!"))
-    if(do_after(owner, 2.5 MINUTES))
-      cross_gauntlet(owner)
-    else to_chat(owner, span_warning("Your concentration is broken as you move!"))
+		to_chat(owner, span_warning("You begin to slowly cross the Gauntlet, although it is a great struggle!"))
+		if(do_after(owner, 2.5 MINUTES))
+			cross_gauntlet(owner)
+		else to_chat(owner, span_warning("Your concentration is broken as you move!"))
 	else if(successes == 2)
-    to_chat(owner, span_warning("You begin to cross the Gauntlet, although it is somewhat difficult!"))
-    if(do_after(owner, 15 SECONDS))
-      cross_gauntlet(owner)
-    else to_chat(owner, span_warning("Your concentration is broken as you move!"))
-  else
-      to_chat(owner, span_warning("You rapidly cross the gauntlet in a coruscating flash of light!"))
-      cross_gauntlet(owner)
+	to_chat(owner, span_warning("You begin to cross the Gauntlet, although it is somewhat difficult!"))
+	if(do_after(owner, 15 SECONDS))
+		cross_gauntlet(owner)
+	else to_chat(owner, span_warning("Your concentration is broken as you move!"))
+	else
+to_chat(owner, span_warning("You rapidly cross the gauntlet in a coruscating flash of light!"))
+	cross_gauntlet(owner)
 	return
 
 /datum/action/cooldown/power/gift/cross_gauntlet/proc/enter_umbra(var/mob/living/owner)
-  if(HAS_TRAIT(owner, TRAIT_CURRENTLY_SIDESTEPPING))
-    exit_umbra(owner)
-  else
-    enter_umbra(owner)
+	if(HAS_TRAIT(owner, TRAIT_CURRENTLY_SIDESTEPPING))
+	exit_umbra(owner)
+	else
+	enter_umbra(owner)
 
 /datum/action/cooldown/power/gift/cross_gauntlet/proc/enter_umbra(var/mob/living/owner)
 	var/atom/nearby_reflection = is_reflection_nearby(owner)
@@ -86,7 +86,6 @@
 	owner.update_sight()
 	owner.incorporeal_move = INCORPOREAL_MOVE_BASIC
 	owner.invisibility = INVISIBILITY_REVENANT
-  
 
 /datum/action/cooldown/power/gift/cross_gauntlet/proc/exit_umbra(var/mob/living/owner)
 	var/turf/phase_turf = get_turf(owner)
