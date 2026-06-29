@@ -283,6 +283,8 @@
 	var/turf/T = get_turf(src)
 	if(!T)
 		return
+	if(HAS_TRAIT(hearing_mob, TRAIT_CURRENTLY_SIDESTEPPING) && !HAS_TRAIT(src, TRAIT_CURRENTLY_SIDESTEPPING)) // DARKPACK EDIT - WEREWOLF
+			return //Skip this if they're in the Umbra
 
 	if(!islist(ignored_mobs))
 		ignored_mobs = list(ignored_mobs)
