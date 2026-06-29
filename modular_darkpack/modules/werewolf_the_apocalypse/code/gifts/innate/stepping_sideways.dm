@@ -45,26 +45,28 @@
 		to_chat(owner, span_bolddanger("You rapidly cross the gauntlet in a coruscating flash of light only to find yourself caught in a web!"))
 	else if(successes == 0)
 		to_chat(owner, span_danger("You attempt to cross the Gauntlet, but at the last moment you spot the Weaver's presence waiting for you! It won't be safe to attempt this again any time soon."))
+		ADD_TRAIT(owner, TRAIT_NO_SIDESTEPPING, GIFT_TRAIT)
+		addtimer(CALLBACK(src, PROC_REF(sidestepping_unlock)), 30 MINUTES)
 	else if(successes == 1)
 		to_chat(owner, span_warning("You begin to slowly cross the Gauntlet, although it is a great struggle!"))
 		if(do_after(owner, 2.5 MINUTES))
 			cross_gauntlet(owner)
 		else to_chat(owner, span_warning("Your concentration is broken as you move!"))
 	else if(successes == 2)
-	to_chat(owner, span_warning("You begin to cross the Gauntlet, although it is somewhat difficult!"))
-	if(do_after(owner, 15 SECONDS))
-		cross_gauntlet(owner)
-	else to_chat(owner, span_warning("Your concentration is broken as you move!"))
+		to_chat(owner, span_warning("You begin to cross the Gauntlet, although it is somewhat difficult!"))
+		if(do_after(owner, 15 SECONDS))
+			cross_gauntlet(owner)
+		else to_chat(owner, span_warning("Your concentration is broken as you move!"))
 	else
-to_chat(owner, span_warning("You rapidly cross the gauntlet in a coruscating flash of light!"))
-	cross_gauntlet(owner)
+		to_chat(owner, span_warning("You rapidly cross the gauntlet in a coruscating flash of light!"))
+		cross_gauntlet(owner)
 	return
 
 /datum/action/cooldown/power/gift/cross_gauntlet/proc/enter_umbra(var/mob/living/owner)
 	if(HAS_TRAIT(owner, TRAIT_CURRENTLY_SIDESTEPPING))
-	exit_umbra(owner)
+		exit_umbra(owner)
 	else
-	enter_umbra(owner)
+		enter_umbra(owner)
 
 /datum/action/cooldown/power/gift/cross_gauntlet/proc/enter_umbra(var/mob/living/owner)
 	var/atom/nearby_reflection = is_reflection_nearby(owner)
@@ -86,6 +88,8 @@ to_chat(owner, span_warning("You rapidly cross the gauntlet in a coruscating fla
 	owner.update_sight()
 	owner.incorporeal_move = INCORPOREAL_MOVE_BASIC
 	owner.invisibility = INVISIBILITY_REVENANT
+	ADD_TRAIT(owner, TRAIT_CURRENTLY_SIDESTEPPING, GIFT_TRAIT)
+	ADD_TRAIT(owner, TRAIT_ONLY_SEE_UMBRA, GIFT_TRAIT)
 
 /datum/action/cooldown/power/gift/cross_gauntlet/proc/exit_umbra(var/mob/living/owner)
 	var/turf/phase_turf = get_turf(owner)
@@ -108,6 +112,12 @@ to_chat(owner, span_warning("You rapidly cross the gauntlet in a coruscating fla
 	owner.update_sight()
 	owner.incorporeal_move = FALSE
 	owner.invisibility = INVISIBILITY_NONE
+	REMOVE_TRAIT(owner, TRAIT_CURRENTLY_SIDESTEPPING, GIFT_TRAIT)
+	REMOVE_TRAIT(owner, TRAIT_ONLY_SEE_UMBRA, GIFT_TRAIT)
+
+/datum/action/cooldown/power/gift/stepping_sideways/proc/sidestepping_unlock(atom/target)
+	REMOVE_TRAIT(owner, TRAIT_NO_SIDESTEPPING, GIFT_TRAIT)
+	to_chat(owner, span_warning("You feel ready to attempt to pass the Gauntlet again!"))
 
 /**
  * Borrowed from base Heretic Mirrorwalk.
