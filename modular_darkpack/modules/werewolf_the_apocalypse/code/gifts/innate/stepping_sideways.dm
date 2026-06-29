@@ -19,10 +19,11 @@
 	numerical = TRUE
 	roll_output_type = ROLL_PRIVATE
 
-/datum/action/cooldown/power/gift/stepping_sideways/IsAvailable()
+/datum/action/cooldown/power/gift/stepping_sideways/IsAvailable(feedback)
 	. = ..()
 	var/turf/owner_turf = get_turf(owner)
 	if(!is_reflection_nearby(get_turf(owner_turf)))
+		to_chat(owner, span_warning("There's no reflective surfaces nearby!"))
 		return FALSE
 
 	if(owner_turf.is_blocked_turf(exclude_mobs = TRUE))
@@ -32,8 +33,6 @@
 	if(HAS_TRAIT(owner, TRAIT_NO_SIDESTEPPING))
 		to_chat(owner, span_warning("Reality flinches, you cannot cross the Gauntlet for a while!"))
 		return FALSE
-
-	return TRUE
 
 /datum/action/cooldown/power/gift/stepping_sideways/Activate()
 	. = ..()
@@ -86,17 +85,16 @@
 		span_notice("You jump into the reflection coming off of [nearby_reflection], entering the Umbra."),
 	)
 	owner.see_invisible = INVISIBILITY_REVENANT
-	owner.update_sight()
-	owner.incorporeal_move = INCORPOREAL_MOVE_BASIC
 	owner.invisibility = INVISIBILITY_REVENANT
 	ADD_TRAIT(owner, TRAIT_CURRENTLY_SIDESTEPPING, GIFT_TRAIT)
 	ADD_TRAIT(owner, TRAIT_HANDS_BLOCKED, GIFT_TRAIT)
 	SEND_SIGNAL(owner, COMSIG_MASQUERADE_VIOLATION)
+	owner.pass_flags |= (PASSDOORS | PASSTABLE | PASSSTRUCTURE) // Phase through doors & fences / tables / machines, dumpsters, barrels, lampposts
 
 /datum/action/cooldown/power/gift/stepping_sideways/proc/exit_umbra(var/mob/living/owner)
 	var/turf/phase_turf = get_turf(owner)
 	var/atom/nearby_reflection = is_reflection_nearby(phase_turf)
-	if(!owner)
+	if(!nearby_reflection)
 		to_chat(owner, span_warning("There are no reflective surfaces nearby to exit from the mirror's realm!"))
 		return FALSE
 
@@ -111,12 +109,12 @@
 		span_notice("You jump out of the reflection coming off of [nearby_reflection], exiting the Umbra."),
 	)
 	owner.see_invisible = SEE_INVISIBLE_LIVING
-	owner.update_sight()
-	owner.incorporeal_move = FALSE
 	owner.invisibility = INVISIBILITY_NONE
 	REMOVE_TRAIT(owner, TRAIT_CURRENTLY_SIDESTEPPING, GIFT_TRAIT)
 	REMOVE_TRAIT(owner, TRAIT_HANDS_BLOCKED, GIFT_TRAIT)
 	SEND_SIGNAL(owner, COMSIG_MASQUERADE_VIOLATION)
+	owner.update_sight()
+	owner.pass_flags &= ~(PASSDOORS | PASSTABLE | PASSSTRUCTURE)
 
 /datum/action/cooldown/power/gift/stepping_sideways/proc/sidestepping_unlock(atom/target)
 	REMOVE_TRAIT(owner, TRAIT_NO_SIDESTEPPING, GIFT_TRAIT)
