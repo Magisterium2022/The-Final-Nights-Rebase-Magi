@@ -10,7 +10,7 @@
 		/obj/structure/mirror,
 		/turf/open/water/beach/vamp,
 		/turf/open/floor/glass,
-		/obj/item/shard/broken_glass,
+		/obj/item/shard,
 		/obj/item/stack/sheet/glass,
 	))
 
