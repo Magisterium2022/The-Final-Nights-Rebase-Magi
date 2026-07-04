@@ -664,6 +664,52 @@
 		/obj/item/mod/module/jetpack/advanced,
 		/obj/item/mod/module/anomaly_locked/kinesis/admin,
 	)
+//TFN ADDITIONS
+/obj/item/mod/control/pre_equipped/alanson //Just BARELY coincidental Hardsuit in standard use by both Iteration X and Void Engineers.
+	theme = /datum/mod_theme/engineering
+	starting_frequency = MODLINK_FREQ_NANOTRASEN
+	applied_core = /obj/item/mod/core/infinite
+	applied_modules = list(
+		/obj/item/mod/module/storage/bluespace,
+		/obj/item/mod/module/emp_shield/advanced,
+		/obj/item/mod/module/welding,
+		/obj/item/mod/module/rad_protection,
+		/obj/item/mod/module/quick_carry/advanced,
+		/obj/item/mod/module/noslip,
+		/obj/item/mod/module/welding/camera_vision,
+		/obj/item/mod/module/pathfinder,
+		/obj/item/mod/module/magnetic_harness,
+		/obj/item/mod/module/holster,
+		/obj/item/mod/module/megaphone,
+		/obj/item/mod/module/active_sonar,
+		/obj/item/mod/module/shove_blocker,
+		/obj/item/mod/module/shooting_assistant,
+		/obj/item/mod/module/quick_cuff,
+		/obj/item/mod/module/dna_lock,
+	)
+
+/obj/item/mod/control/pre_equipped/martinez //Not coincidental much higher-grade combat hardsuit.
+	theme = /datum/mod_theme/engineering
+	starting_frequency = MODLINK_FREQ_NANOTRASEN
+	applied_core = /obj/item/mod/core/infinite
+	applied_modules = list(
+		/obj/item/mod/module/storage/bluespace,
+		/obj/item/mod/module/emp_shield/advanced,
+		/obj/item/mod/module/welding,
+		/obj/item/mod/module/rad_protection,
+		/obj/item/mod/module/quick_carry/advanced,
+		/obj/item/mod/module/noslip,
+		/obj/item/mod/module/welding/camera_vision,
+		/obj/item/mod/module/pathfinder,
+		/obj/item/mod/module/magnetic_harness,
+		/obj/item/mod/module/holster,
+		/obj/item/mod/module/megaphone,
+		/obj/item/mod/module/active_sonar,
+		/obj/item/mod/module/shove_blocker,
+		/obj/item/mod/module/shooting_assistant,
+		/obj/item/mod/module/quick_cuff,
+		/obj/item/mod/module/dna_lock,
+	)
 
 //these exist for the prefs menu
 /obj/item/mod/control/pre_equipped/empty
