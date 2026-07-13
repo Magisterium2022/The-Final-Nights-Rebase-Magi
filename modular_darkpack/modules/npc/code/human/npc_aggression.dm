@@ -10,6 +10,10 @@
 	// TFN EDIT START
 	if (HAS_TRAIT(victim, TRAIT_OBFUSCATED))
 		return
+	if (HAS_TRAIT(victim, TRAIT_CURRENTLY_SIDESTEPPING))
+		return
+	if(victim.invisibility > src.see_invisible)
+		return
 	// TFN EDIT END
 
 	// If the victim doesn't appear dead, enter combat mode and set
