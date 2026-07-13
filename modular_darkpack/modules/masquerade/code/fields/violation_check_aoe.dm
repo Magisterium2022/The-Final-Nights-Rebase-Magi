@@ -74,6 +74,8 @@
 		return
 	if(HAS_TRAIT(source, TRAIT_OBFUSCATED))
 		return
+	if(HAS_TRAIT(source, TRAIT_CURRENTLY_SIDESTEPPING))
+		return
 	if(!check_zone_masquerade(host_mob))
 		return
 	if(!can_see(host_mob, source, 7))
